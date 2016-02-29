@@ -213,6 +213,13 @@ impl fmt::Display for DirectoryItem {
     }
 }
 
+impl std::str::FromStr for DirectoryItem {
+    type Err = GopherError;
+    fn from_str(s: &str) -> Result<DirectoryItem, GopherError> {
+        DirectoryItem::from_str(s)
+    }
+}
+
 /// A Gopher Directory
 #[derive(Debug)]
 pub struct Directory {
@@ -250,6 +257,13 @@ impl fmt::Display for Directory {
     }
 }
 
+impl std::str::FromStr for Directory {
+    type Err = GopherError;
+    fn from_str(s: &str) -> Result<Directory, GopherError> {
+        Directory::from_str(s)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -263,7 +277,7 @@ mod tests {
 1Student-Staff Directories\t\tuinfo.ais.umn.edu\t70
 1Departmental Publications\tStuff:DP:\trawBits.micro.umn.edu\t70
 .";
-        let directory = Directory::from_str(input).expect("failed to parse sample directory");
+        let directory: Directory = input.parse().expect("failed to parse sample directory");
         assert_eq!(directory.items.len(), 6);
 
         let item0 = &directory.items[0];
@@ -290,7 +304,7 @@ mod tests {
 1Student-Staff Directories\t\tuinfo.ais.umn.edu\t70
 1Departmental Publications\tStuff:DP:\trawBits.micro.umn.edu\t70
 .";
-        let directory = Directory::from_str(input).expect("failed to parse sample directory");
+        let directory: Directory = input.parse().expect("failed to parse sample directory");
         let output = format!("{}", directory);
         assert_eq!(input, output);
     }
@@ -298,7 +312,7 @@ mod tests {
     #[test]
     fn parse_directory_item() {
         let input = "0A Sample Text File\t/sample.txt\tgopher.example.net\t70";
-        let item = DirectoryItem::from_str(input).expect("failed to parse sample directory item");
+        let item: DirectoryItem = input.parse().expect("failed to parse sample directory item");
         assert_eq!(item.t, Type::File);
         assert_eq!(item.name, "A Sample Text File");
         assert_eq!(item.selector, "/sample.txt");
