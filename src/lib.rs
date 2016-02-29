@@ -1,3 +1,56 @@
+//! A simple library for working with the Gopher protocol, as described
+//! in [RFC 1436](https://tools.ietf.org/html/rfc1436)
+//!
+//! # Usage
+//!
+//! ```
+//! use gopher::*;
+//!
+//! let input = "0About internet Gopher\tStuff:About us\trawBits.micro.umn.edu\t70
+//! 1Around University of Minnesota\tZ,5692,AUM\tunderdog.micro.umn.edu\t70
+//! 1Microcomputer News & Prices\tPrices/\tpserver.bookstore.umn.edu\t70
+//! 1Courses, Schedules, Calendars\t\tevents.ais.umn.edu\t9120
+//! 1Student-Staff Directories\t\tuinfo.ais.umn.edu\t70
+//! 1Departmental Publications\tStuff:DP:\trawBits.micro.umn.edu\t70
+//! .";
+//!
+//! let directory = Directory::from_str(input).unwrap();
+//! let items = directory.items();
+//!
+//! assert_eq!(items.len(), 6);
+//! assert_eq!(items[0].t, Type::File);
+//! assert_eq!(items[3].port, 9120);
+//! ```
+//!
+//! # Examples
+//!
+//! This library includes as an example a simple command-line gopher client,
+//! which can be run with `cargo run --example client` or `cargo run --example client -- hostname:port resource`.
+//!
+//! ```
+//! $ cargo run --example client -- cargo run --example client -- gopher.quux.org:70 /Software/Gopher/servers
+//!     Running `target/debug/examples/client gopher.quux.org:70 /Software/Gopher/servers`
+//! Got Directory:
+//! 
+//! 1 Aerv.nl                                                      aerv.nl:70
+//! 1 Dark Side Of The Net                                         gopher.rp.spb.su:70
+//! 1 Floodgap.Com -- featuring a Gopherspace search engine        gopher.floodgap.com:70
+//! 1 Gopher Jewels 2 from JumpJet Gopher                          home.jumpjet.info:70 \Gopher_Jewels_2
+//! 1 Hal3000.cx                                                   Hal3000.cx:70
+//! 1 Heatdeath.Org                                                gopher.heatdeath.org:70
+//! 1 Heavything.Com                                               gopher.heavything.com:70
+//! 1 Ocean State Free-Net Gopher                                  gopher.osfn.org:70
+//! 1 Quux.Org/GopherProject.Org Gopher Archive                    quux.org:70
+//! 1 SDF Public Access UNIX                                       freeshell.org:70
+//! SDF offers gopher hosting as well!
+//! 1 Simple Machines                                              jgw.mdns.org:70
+//! 1 Whole Earth 'Lectronic Links                                 gopher.well.sf.ca.us:70
+//! 1 Zedah.Org                                                    zedah.org:70
+//! 1 shamrockshire.yi.org                                         shamrockshire.yi.org:70
+//! 1 xn--ortsvernderlich-6kb.de                                   gopher.xn--ortsvernderlich-6kb.de:70
+//! $
+//! ```
+
 #![feature(plugin)]
 #![plugin(regex_macros)]
 extern crate regex;
