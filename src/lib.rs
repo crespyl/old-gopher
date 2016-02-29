@@ -14,7 +14,7 @@
 //! 1Departmental Publications\tStuff:DP:\trawBits.micro.umn.edu\t70
 //! .";
 //!
-//! let directory = Directory::from_str(input).unwrap();
+//! let directory = Directory::from_str(input).expect("failed to parse directory");
 //! let items = directory.items();
 //!
 //! assert_eq!(items.len(), 6);
@@ -27,7 +27,7 @@
 //! This library includes as an example a simple command-line gopher client,
 //! which can be run with `cargo run --example client` or `cargo run --example client -- hostname:port resource`.
 //!
-//! ```
+//! `
 //! $ cargo run --example client -- cargo run --example client -- gopher.quux.org:70 /Software/Gopher/servers
 //!     Running `target/debug/examples/client gopher.quux.org:70 /Software/Gopher/servers`
 //! Got Directory:
@@ -49,7 +49,7 @@
 //! 1 shamrockshire.yi.org                                         shamrockshire.yi.org:70
 //! 1 xn--ortsvernderlich-6kb.de                                   gopher.xn--ortsvernderlich-6kb.de:70
 //! $
-//! ```
+//! `
 
 #![feature(plugin)]
 #![plugin(regex_macros)]
@@ -220,7 +220,7 @@ impl Directory {
     pub fn from_str(s: &str) -> Result<Directory, GopherError> {
         let mut items = Vec::new();
         for line in s.lines() {
-            if line == "." { break; }
+            if line.trim() == "." { break; }
             else if let Ok(item) = DirectoryItem::from_str(line) {
                 items.push(item);
             } else {
