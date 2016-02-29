@@ -90,6 +90,7 @@ pub enum Type {
     Tn3270Session,
     GIF,
     Image,
+    Info,
     Unknown(char),
 }
 
@@ -128,6 +129,7 @@ impl Type {
             'T' => Type::Tn3270Session,
             'g' => Type::GIF,
             'I' => Type::Image,
+            'i' => Type::Info,
             other => Type::Unknown(other)
         }
     }
@@ -149,6 +151,7 @@ impl Type {
             Type::Tn3270Session => 'T',
             Type::GIF => 'g',
             Type::Image => 'I',
+            Type::Info => 'i',
             Type::Unknown(other) => other,
         }
     }
@@ -191,8 +194,9 @@ impl DirectoryItem {
     /// Many Gopher servers use "fake" items to provide human readable text in
     /// directory listings.
     /// This function is a simple heuristic, and shouldn't really be relied upon
-    pub fn is_fake(&self) -> bool {
-        self.selector.ends_with("fake") ||
+    pub fn is_info(&self) -> bool {
+        self.t == Type::Info ||
+            self.selector.ends_with("fake") ||
             self.name == "fake" ||
             self.host == "fake"
     }

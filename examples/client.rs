@@ -7,7 +7,7 @@ use std::env;
 
 fn pretty_print_directory(dir: &Directory) {
     for item in dir.items().iter() {
-        if item.is_fake() {
+        if item.is_info() {
             println!("{}", item.name);
         } else {
             println!("{sym} {name:100} {host}:{port} {selector}",
