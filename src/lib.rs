@@ -158,13 +158,13 @@ impl Type {
 }
 
 /// An item in a Gopher Directory
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct DirectoryItem {
     pub t: Type,
     pub name: String,
     pub selector: String,
     pub host: String,
-    pub port: usize,
+    pub port: u16,
 }
 
 impl DirectoryItem {
@@ -221,7 +221,7 @@ impl std::str::FromStr for DirectoryItem {
 }
 
 /// A Gopher Directory
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Directory {
     items: Vec<DirectoryItem>
 }
@@ -242,9 +242,14 @@ impl Directory {
         Ok(Directory { items: items })
     }
 
-    /// Returns the list of DirectoryItems
+    /// Returns the list of all DirectoryItems, including info items
     pub fn items(&self) -> &[DirectoryItem] {
         &self.items
+    }
+
+    /// Get the nth non-info link item
+    pub fn get_nth_link(&self, idx: usize) -> Option<&DirectoryItem> {
+        self.items.iter().filter(|&item| !item.is_info()).nth(idx)
     }
 }
 
