@@ -181,7 +181,7 @@ impl DirectoryItem {
         if let Some(captures) = RE.captures(s) {
             Ok(
                 DirectoryItem {
-                    t: Type::from_char(s.chars().nth(0).unwrap()),
+                    t: Type::from_char(s.chars().next().unwrap()),
                     name: captures.name("name").unwrap().as_str().into(),
                     selector: captures.name("selector").unwrap().as_str().into(),
                     host: captures.name("host").unwrap().as_str().into(),
