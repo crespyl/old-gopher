@@ -51,12 +51,12 @@
 //! $
 //! `
 
-#![feature(plugin)]
-#![plugin(regex_macros)]
+#[macro_use] extern crate lazy_static;
 extern crate regex;
 
 use std::io;
 use std::fmt;
+use regex::Regex;
 
 pub mod net;
 
@@ -106,7 +106,7 @@ impl Type {
             Type::Directory | Type::CSOPhoneBook |
             Type::Error | Type::SearchServer |
             Type::TelnetSession | Type::Tn3270Session |
-            Type::RedundantServer | Type::Unknown
+            Type::RedundantServer | Type::Unknown(_)
                 => true,
             _ => false,
         }
@@ -174,16 +174,18 @@ impl DirectoryItem {
             return Err(GopherError::ParseDirectoryItem(s.into()));
         }
 
-        let re = regex!(r"(?P<t>.)(?P<name>[^\t]*)\t(?P<selector>[^\t]*)\t(?P<host>[^\t]*)\t(?P<port>\d*)");
+        lazy_static! {
+            static ref RE: Regex = Regex::new(r"(?P<t>.)(?P<name>[^\t]*)\t(?P<selector>[^\t]*)\t(?P<host>[^\t]*)\t(?P<port>\d*)").unwrap();
+        }
 
-        if let Some(captures) = re.captures(s) {
+        if let Some(captures) = RE.captures(s) {
             Ok(
                 DirectoryItem {
                     t: Type::from_char(s.chars().nth(0).unwrap()),
-                    name: captures.name("name").unwrap().into(),
-                    selector: captures.name("selector").unwrap().into(),
-                    host: captures.name("host").unwrap().into(),
-                    port: captures.name("port").unwrap().parse().unwrap_or(70),
+                    name: captures.name("name").unwrap().as_str().into(),
+                    selector: captures.name("selector").unwrap().as_str().into(),
+                    host: captures.name("host").unwrap().as_str().into(),
+                    port: captures.name("port").unwrap().as_str().parse().unwrap_or(70),
                 }
             )
         } else {
@@ -251,7 +253,7 @@ impl Directory {
 impl fmt::Display for Directory {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for item in &self.items {
-            try!(write!(f, "{}\n", item));
+            write!(f, "{}\n", item)?;
         }
         write!(f, ".")
     }
