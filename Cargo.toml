@@ -6,3 +6,12 @@ authors = ["Peter Jacobs <peter@crespyl.net>"]
 [dependencies]
 regex = "1.3"
 lazy_static = "1.4"
+rustbox = "*"
+
+[lib]
+name = "gopher"
+path = "src/lib.rs"
+
+[[bin]]
+name = "getter"
+path = "src/main.rs"
